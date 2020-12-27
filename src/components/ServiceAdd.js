@@ -1,6 +1,6 @@
 import React from 'react'
-import {useSelector, useDispatch} from 'react-redux'
-import {changeServiceField, addService} from '../actions/actionCreator'
+import { useSelector, useDispatch } from 'react-redux'
+import { changeServiceField, addService } from '../redux/actionCreator'
 
 
 export default function ServiceAdd() {
@@ -14,14 +14,41 @@ export default function ServiceAdd() {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        dispatch(addService(item.name, item.price))
-        const name = ''
-        const value = ''
-        dispatch(changeServiceField(name, value))
+        if (item.id) dispatch(addService(item.name, item.price, item.id))
+        else dispatch(addService(item.name, item.price))
+        dispatch(changeServiceField('name', ''))
+        dispatch(changeServiceField('price', ''))
+        dispatch(changeServiceField('id', ''))
+        dispatch(changeServiceField('editflag', false))
     }
-       
-    return (
-        <form onSubmit={handleSubmit} >
+
+    const handleCancel = (event) => {
+        event.preventDefault()
+        dispatch(changeServiceField('name', ''))
+        dispatch(changeServiceField('price', ''))
+        dispatch(changeServiceField('id', ''))
+        dispatch(changeServiceField('editflag', false))
+    }
+
+    const hocBtnCancel = (Component) => {
+
+        return class extends React.Component {
+            render() {
+                if (item.editflag) {
+                    return (
+                        <Component>
+                            <button type = 'click' className='btn btn-danger' onClick = {handleCancel}>Cancel</button>
+                        </Component>
+                    )
+                } else return <Component />
+
+            }
+        }
+    }
+
+
+    function Form_Service(props) {
+        return <form onSubmit={handleSubmit} >
             <div className="mb-3">
                 <input type="text" className="form-control" name='name' onChange={handleChange} value={item.name} />
             </div>
@@ -29,6 +56,15 @@ export default function ServiceAdd() {
                 <input type="text" className="form-control" name='price' onChange={handleChange} value={item.price} />
             </div>
             <button type="submit" className="btn btn-primary">Save</button>
+            {props.children}
         </form>
+    }
+    
+    const WithBtnCancel = hocBtnCancel(Form_Service)
+    
+    
+    return (
+        <WithBtnCancel />
     )
+
 }

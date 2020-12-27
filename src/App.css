@@ -2,14 +2,14 @@
   text-align: center;
   padding-left: 50px ;
   padding-top: 30px;
-  width: 40%;
+  width: 50%;
 }
 
 form {
   display: flex;
 
 }
-button {
+.btn {
   margin-left: 5px;
   height: 100%;
 }
@@ -18,4 +18,8 @@ form div {
 }
 li {
   text-align: left;
+}
+.list-group-item {
+  display: flex;
+  justify-content: space-between;
 }
